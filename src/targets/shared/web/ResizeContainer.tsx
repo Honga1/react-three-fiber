@@ -5,7 +5,7 @@ import { ResizeObserver } from '@juggle/resize-observer'
 import mergeRefs from 'react-merge-refs'
 import { useCanvas, CanvasProps, DomEventHandlers } from '../../../canvas'
 
-const defaultStyles: React.CSSProperties = { position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }
+const defaultStyles: React.CSSProperties = { position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }
 
 interface Renderer extends Omit<ThreeRenderer, 'domElement'> {}
 
