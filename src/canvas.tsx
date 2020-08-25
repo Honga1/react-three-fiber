@@ -61,6 +61,7 @@ export type Subscription = {
 export type CanvasContext = SharedCanvasContext & {
   captured: Intersection[] | undefined
   noEvents: boolean
+  noCanvasEvents: boolean
   ready: boolean
   active: boolean
   manual: number
@@ -96,6 +97,7 @@ export interface CanvasProps {
   invalidateFrameloop?: boolean
   updateDefaultCamera?: boolean
   noEvents?: boolean
+  noCanvasEvents?: boolean
   gl?: Partial<THREE.WebGLRendererParameters>
   camera?: Partial<
     ReactThreeFiber.Object3DNode<THREE.Camera, typeof THREE.Camera> &
@@ -132,7 +134,7 @@ function makeId(event: DomEvent) {
 
 export const stateContext = createContext<SharedCanvasContext>({} as SharedCanvasContext)
 
-export const useCanvas = (props: UseCanvasProps): DomEventHandlers => {
+export const useCanvas = (props: UseCanvasProps): DomEventHandlers | {} => {
   const {
     children,
     gl,
@@ -149,6 +151,7 @@ export const useCanvas = (props: UseCanvasProps): DomEventHandlers => {
     invalidateFrameloop = false,
     updateDefaultCamera = true,
     noEvents = false,
+    noCanvasEvents = false,
     onCreated,
     onPointerMissed,
   } = props
@@ -196,6 +199,7 @@ export const useCanvas = (props: UseCanvasProps): DomEventHandlers => {
     vr,
     concurrent,
     noEvents,
+    noCanvasEvents,
     invalidateFrameloop: false,
     frames: 0,
     aspect: 0,
@@ -212,7 +216,7 @@ export const useCanvas = (props: UseCanvasProps): DomEventHandlers => {
     initialHits: [],
     pointer: new TinyEmitter(),
     captured: undefined,
-    events: (undefined as unknown) as DomEventHandlers,
+    events: {} as DomEventHandlers,
 
     subscribe: (ref: React.MutableRefObject<RenderCallback>, priority: number = 0) => {
       // If this subscription was given a priority, it takes rendering into its own hands
@@ -246,7 +250,8 @@ export const useCanvas = (props: UseCanvasProps): DomEventHandlers => {
     state.current.gl = gl
     state.current.concurrent = concurrent
     state.current.noEvents = noEvents
-  }, [invalidateFrameloop, vr, concurrent, noEvents, ready, size, defaultCam, gl])
+    state.current.noCanvasEvents = noCanvasEvents
+  }, [invalidateFrameloop, vr, concurrent, noEvents, noCanvasEvents, ready, size, defaultCam, gl])
 
   // Adjusts default camera
   useMemo(() => {
@@ -548,6 +553,7 @@ export const useCanvas = (props: UseCanvasProps): DomEventHandlers => {
       manual,
       vr,
       noEvents,
+      noCanvasEvents,
       invalidateFrameloop,
       frames,
       subscribers,
@@ -627,5 +633,5 @@ export const useCanvas = (props: UseCanvasProps): DomEventHandlers => {
     []
   )
 
-  return state.current.events
+  return noCanvasEvents ? {} : state.current.events
 }

@@ -4,6 +4,7 @@ import useMeasure, { RectReadOnly } from 'react-use-measure'
 import { ResizeObserver } from '@juggle/resize-observer'
 import mergeRefs from 'react-merge-refs'
 import { useCanvas, CanvasProps, DomEventHandlers } from '../../../canvas'
+import { isEmpty } from 'lodash-es'
 
 const defaultStyles: React.CSSProperties = { position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }
 
@@ -37,7 +38,10 @@ function Content({ children, setEvents, container, renderer, effects, ...props }
 
   // Init canvas, fetch events, hand them back to the wrapping div
   const events = useCanvas({ ...props, children, gl: (gl as unknown) as WebGLRenderer })
-  useEffect(() => void setEvents(events), [events])
+
+  useEffect(() => {
+    return void !isEmpty(events) && setEvents(events as DomEventHandlers)
+  }, [events])
   return null
 }
 
