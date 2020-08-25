@@ -50,7 +50,7 @@ The canvas stretches to 100% of the next relative/absolute parent-container. Mak
   concurrent = false            // Enables React concurrent mode
   resize = undefined            // Resize config, see react-use-measure's options
   orthographic = false          // Creates an orthographic camera if true
-  noEvents = false              // Switch off raytracing and event support
+  noEvents = false              // Switch off raytracing and event support for children
   pixelRatio = undefined        // You could provide window.devicePixelRatio if you like
   invalidateFrameloop = false   // When true it only renders on changes, when false it's a game loop
   updateDefaultCamera = true    // Adjusts default camera on size changes
